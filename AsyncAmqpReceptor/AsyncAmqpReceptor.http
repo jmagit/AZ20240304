@@ -1,0 +1,6 @@
+@AsyncAmqpReceptor_HostAddress = http://localhost:5210
+
+GET {{AsyncAmqpReceptor_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
