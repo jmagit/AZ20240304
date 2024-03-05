@@ -8,7 +8,7 @@ namespace Async.Amqp.Receptor.Controllers {
     public class RecibidosController : ControllerBase {
         [HttpGet]
         public IActionResult Index() {
-            return Ok(Store.Peticiones);
+            return Ok(Store.Peticiones.OrderByDescending(p => p.Recibido));
         }
     }
 }

@@ -61,8 +61,10 @@ namespace Async.Amqp.Receptor {
                                  exclusive: false,
                                  autoDelete: false,
                                  arguments: null);
+
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ev) => {
+                var canal = (model as EventingBasicConsumer).Model;
                 var body = Encoding.UTF8.GetString(ev.Body.ToArray());
                 var message = JsonSerializer.Deserialize<MessageDTO>(body /*, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }*/);
                 if(message == null ) {
@@ -70,17 +72,43 @@ namespace Async.Amqp.Receptor {
                 }
                 Thread.Sleep(message.Msg.Length * 100);
                 if(message.Msg.EndsWith(address)) {
-                    channel.BasicNack(ev.DeliveryTag, false, true);
-                    //channel.BasicReject(ev.DeliveryTag, false);
+                    canal.BasicNack(ev.DeliveryTag, false, true);
+                    //canal.BasicReject(ev.DeliveryTag, false);
                 } else {
                     Store.Add(message);
-                    channel.BasicAck(ev.DeliveryTag, false);
+                    canal.BasicAck(ev.DeliveryTag, false);
                 }
             };
             channel.BasicConsume(queue: "demo.saludos",
                                  // autoAck: true,
                                  autoAck: false,
                                  consumer: consumer);
+            var rpcConsumer = new EventingBasicConsumer(channel);
+            rpcConsumer.Received += (model, ev) => {
+                var canal = (model as EventingBasicConsumer).Model;
+                var body = Encoding.UTF8.GetString(ev.Body.ToArray());
+                var message = JsonSerializer.Deserialize<MessageDTO>(body /*, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }*/);
+                var props = ev.BasicProperties;
+                var replyProps = channel.CreateBasicProperties();
+                replyProps.CorrelationId = props.CorrelationId;
+
+                var response = new MessageDTO(
+                    $"Cuerpo: {message.Msg.ToUpper()} Enviado: {message.Enviado} Recibido: {DateTime.Now}",
+                    address
+                    );
+                Store.Add(response);
+                Thread.Sleep(message.Msg.Length * 100);
+                canal.BasicPublish(exchange: string.Empty,
+                     routingKey: props.ReplyTo,
+                     basicProperties: replyProps,
+                     body: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response)));
+                canal.BasicAck(deliveryTag: ev.DeliveryTag, multiple: false);
+            };
+            channel.BasicConsume(queue: "demo.peticiones",
+                                 // autoAck: true,
+                                 autoAck: false,
+                                 consumer: rpcConsumer);
+
         }
     }
 }
