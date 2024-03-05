@@ -50,7 +50,8 @@ namespace Async.Amqp.Receptor {
         private static void ConsumerConfig(string address) {
             var factory = new ConnectionFactory {
                 HostName = "localhost", Port = 5672,
-                UserName = "admin", Password = "curso", ClientProvidedName = "app:audit component:event-consumer"
+                UserName = "admin", Password = "curso", 
+                ClientProvidedName = "Async.Amqp.Receptor"
             };
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
@@ -64,9 +65,13 @@ namespace Async.Amqp.Receptor {
             consumer.Received += (model, ev) => {
                 var body = Encoding.UTF8.GetString(ev.Body.ToArray());
                 var message = JsonSerializer.Deserialize<MessageDTO>(body /*, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }*/);
+                if(message == null ) {
+                    throw new FormatException("Invalid JSON");
+                }
+                Thread.Sleep(message.Msg.Length * 100);
                 if(message.Msg.EndsWith(address)) {
-                    //channel.BasicNack(ev.DeliveryTag, false, true);
-                    channel.BasicReject(ev.DeliveryTag, false);
+                    channel.BasicNack(ev.DeliveryTag, false, true);
+                    //channel.BasicReject(ev.DeliveryTag, false);
                 } else {
                     Store.Add(message);
                     channel.BasicAck(ev.DeliveryTag, false);
