@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace AsyncAmqpEmisor.Services {
+namespace Async.Amqp.Emisor.Services {
     public class RabbitMQClientService : IAmqpService {
 
         public void Send(object message) {

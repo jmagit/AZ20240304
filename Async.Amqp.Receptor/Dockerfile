@@ -9,17 +9,17 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["AsyncAmqpReceptor/AsyncAmqpReceptor.csproj", "AsyncAmqpReceptor/"]
-RUN dotnet restore "./AsyncAmqpReceptor/AsyncAmqpReceptor.csproj"
+COPY ["Async.Amqp.Receptor/Async.Amqp.Receptor.csproj", "Async.Amqp.Receptor/"]
+RUN dotnet restore "./Async.Amqp.Receptor/Async.Amqp.Receptor.csproj"
 COPY . .
-WORKDIR "/src/AsyncAmqpReceptor"
-RUN dotnet build "./AsyncAmqpReceptor.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Async.Amqp.Receptor"
+RUN dotnet build "./Async.Amqp.Receptor.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./AsyncAmqpReceptor.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Async.Amqp.Receptor.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "AsyncAmqpReceptor.dll"]
+ENTRYPOINT ["dotnet", "Async.Amqp.Receptor.dll"]

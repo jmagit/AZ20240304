@@ -1,6 +1,6 @@
-﻿using AsyncAmqpEmisor.Models;
+﻿using Async.Amqp.Emisor.Models;
 
-namespace AsyncAmqpReceptor.Models {
+namespace Async.Amqp.Receptor.Models {
     public class Peticion {
         public MessageDTO Message { get; set; }
         public DateTime Recibido { get; init; } = DateTime.Now;

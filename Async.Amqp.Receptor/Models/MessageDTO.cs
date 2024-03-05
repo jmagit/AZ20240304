@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace AsyncAmqpEmisor.Models {
+namespace Async.Amqp.Emisor.Models {
     public class MessageDTO {
         [JsonPropertyName("msg")]
         public string Msg { get; set; }

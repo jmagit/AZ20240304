@@ -1,13 +1,15 @@
 
 
-using AsyncAmqpEmisor.Models;
-using AsyncAmqpReceptor.Models;
+using Async.Amqp.Emisor.Models;
+using Async.Amqp.Receptor.Models;
+using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.Hosting.Server;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
 
-namespace AsyncAmqpReceptor {
+namespace Async.Amqp.Receptor {
     // dotnet watch run --urls=http://localhost:8055/
     // dotnet watch run --urls=http://localhost:8056/
 
@@ -22,7 +24,7 @@ namespace AsyncAmqpReceptor {
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            ConsumerConfig();
+
 
             var app = builder.Build();
 
@@ -39,13 +41,16 @@ namespace AsyncAmqpReceptor {
 
             app.MapControllers();
 
-            app.Run();
+            // app.Run();
+            app.Start();
+            ConsumerConfig(app.Urls.First().ToString().Split(':').Last());
+            app.WaitForShutdown();
         }
 
-        private static void ConsumerConfig() {
+        private static void ConsumerConfig(string address) {
             var factory = new ConnectionFactory {
                 HostName = "localhost", Port = 5672,
-                UserName = "admin", Password = "curso", ClientProvidedName= "app:audit component:event-consumer"
+                UserName = "admin", Password = "curso", ClientProvidedName = "app:audit component:event-consumer"
             };
             var connection = factory.CreateConnection();
             var channel = connection.CreateModel();
@@ -58,10 +63,18 @@ namespace AsyncAmqpReceptor {
             var consumer = new EventingBasicConsumer(channel);
             consumer.Received += (model, ev) => {
                 var body = Encoding.UTF8.GetString(ev.Body.ToArray());
-                Store.Add(JsonSerializer.Deserialize<MessageDTO>(body /*, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }*/));
+                var message = JsonSerializer.Deserialize<MessageDTO>(body /*, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }*/);
+                if(message.Msg.EndsWith(address)) {
+                    //channel.BasicNack(ev.DeliveryTag, false, true);
+                    channel.BasicReject(ev.DeliveryTag, false);
+                } else {
+                    Store.Add(message);
+                    channel.BasicAck(ev.DeliveryTag, false);
+                }
             };
             channel.BasicConsume(queue: "demo.saludos",
-                                 autoAck: true,
+                                 // autoAck: true,
+                                 autoAck: false,
                                  consumer: consumer);
         }
     }

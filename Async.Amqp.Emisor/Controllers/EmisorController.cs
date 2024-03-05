@@ -1,9 +1,9 @@
-﻿using AsyncAmqpEmisor.Models;
-using AsyncAmqpEmisor.Services;
+﻿using Async.Amqp.Emisor.Models;
+using Async.Amqp.Emisor.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AsyncAmqpEmisor.Controllers {
+namespace Async.Amqp.Emisor.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class EmisorController : ControllerBase {

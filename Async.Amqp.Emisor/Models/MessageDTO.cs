@@ -1,4 +1,4 @@
-﻿namespace AsyncAmqpEmisor.Models {
+﻿namespace Async.Amqp.Emisor.Models {
     public class MessageDTO {
         public string Msg { get; set; }
         public string Origen { get; set; }

@@ -5,9 +5,9 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoAPI", "DemoAPI\DemoAPI.csproj", "{87EF2560-6CA1-46F3-BE2D-0A8CBD2598AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncAmqpEmisor", "AsyncAmqpEmisor\AsyncAmqpEmisor.csproj", "{5D7EB4B0-6A01-40E2-AB95-F2307BCF001E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Async.Amqp.Emisor", "Async.Amqp.Emisor\Async.Amqp.Emisor.csproj", "{5D7EB4B0-6A01-40E2-AB95-F2307BCF001E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncAmqpReceptor", "AsyncAmqpReceptor\AsyncAmqpReceptor.csproj", "{5EF996DA-2E17-4BED-8214-4BE0F5C5C8CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Async.Amqp.Receptor", "Async.Amqp.Receptor\Async.Amqp.Receptor.csproj", "{5EF996DA-2E17-4BED-8214-4BE0F5C5C8CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,8 +1,8 @@
-﻿using AsyncAmqpReceptor.Models;
+﻿using Async.Amqp.Receptor.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AsyncAmqpReceptor.Controllers {
+namespace Async.Amqp.Receptor.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class RecibidosController : ControllerBase {

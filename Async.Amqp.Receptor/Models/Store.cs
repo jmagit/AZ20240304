@@ -1,6 +1,6 @@
-﻿using AsyncAmqpEmisor.Models;
+﻿using Async.Amqp.Emisor.Models;
 
-namespace AsyncAmqpReceptor.Models {
+namespace Async.Amqp.Receptor.Models {
     public class Store {
         public static List<Peticion> Peticiones { get; } = new List<Peticion>();
 

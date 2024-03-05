@@ -1,7 +1,7 @@
 
-using AsyncAmqpEmisor.Services;
+using Async.Amqp.Emisor.Services;
 
-namespace AsyncAmqpEmisor {
+namespace Async.Amqp.Emisor {
     // dotnet watch run --urls=http://localhost:8051/
     // dotnet watch run --urls=http://localhost:8052/
     public class Program {
