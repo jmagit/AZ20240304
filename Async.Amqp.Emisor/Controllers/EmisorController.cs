@@ -38,6 +38,13 @@ namespace Async.Amqp.Emisor.Controllers {
             return Accepted();
         }
 
+        [HttpGet("fanout")]
+        public IActionResult Fanout() {
+            srv.Send(new MessageDTO($"Envio fanout", Request.Host.Port.ToString()),
+                exchange: "demo.fanout");
+            return Accepted();
+        }
+
         [HttpGet("rpc")]
         public IActionResult Rpc([FromQuery] string nombre = "mundo") {
             _logger.Log(LogLevel.Information, $"Send: Hola don {nombre}");
