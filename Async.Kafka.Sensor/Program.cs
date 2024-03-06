@@ -14,7 +14,7 @@ string sensorName = args[0].ToUpper();
 using(var adminClient = new AdminClientBuilder(new AdminClientConfig { BootstrapServers = brokerList }).Build()) {
     try {
         await adminClient.CreateTopicsAsync([
-            new TopicSpecification { Name = topicName, ReplicationFactor = 1, NumPartitions = 1 }
+            new TopicSpecification { Name = topicName, ReplicationFactor = 1, NumPartitions = 2 }
         ]);
     } catch(CreateTopicsException e) {
         if(!e.Results[0].Error.Reason.Contains("already exists"))

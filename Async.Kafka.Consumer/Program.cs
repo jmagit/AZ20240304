@@ -17,7 +17,7 @@ string groupName = args.Length > 1 ? args[1] : mode;
 using(var adminClient = new AdminClientBuilder(new AdminClientConfig { BootstrapServers = brokerList }).Build()) {
     try {
         await adminClient.CreateTopicsAsync([
-            new TopicSpecification { Name = topicName, ReplicationFactor = 1, NumPartitions = 1 }
+            new TopicSpecification { Name = topicName, ReplicationFactor = 1, NumPartitions = 2 }
         ]);
     } catch(CreateTopicsException e) {
         if(!e.Results[0].Error.Reason.Contains("already exists"))
@@ -118,9 +118,11 @@ using(var consumer = new ConsumerBuilder<string, Evento>(config)
 
 record Evento(string msg, string origen, DateTime enviado);
 
+#pragma warning disable CS8603 // Posible tipo de valor devuelto de referencia nulo
 class EventoDeserializer : IDeserializer<Evento> {
     public Evento Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context) {
         if(isNull) return null;
         return JsonSerializer.Deserialize<Evento>(Encoding.UTF8.GetString(data));
     }
 }
+#pragma warning restore CS8603 // Posible tipo de valor devuelto de referencia nulo
