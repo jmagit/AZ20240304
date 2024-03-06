@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Confluent.Kafka.Admin;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -12,6 +13,18 @@ string brokerList = "localhost:9092";
 string topicName = "sensores";
 string mode = args[0].ToLower();
 string groupName = args.Length > 1 ? args[1] : mode;
+
+using(var adminClient = new AdminClientBuilder(new AdminClientConfig { BootstrapServers = brokerList }).Build()) {
+    try {
+        await adminClient.CreateTopicsAsync([
+            new TopicSpecification { Name = topicName, ReplicationFactor = 1, NumPartitions = 1 }
+        ]);
+    } catch(CreateTopicsException e) {
+        if(!e.Results[0].Error.Reason.Contains("already exists"))
+            Console.WriteLine($"An error occurred creating topic {e.Results[0].Topic}: {e.Results[0].Error.Reason}");
+    }
+}
+
 
 Console.WriteLine($"Started consumer {mode.ToUpper()}, Ctrl-C to stop consuming");
 
@@ -40,7 +53,7 @@ using(var consumer = new ConsumerBuilder<string, Evento>(config)
     //.SetStatisticsHandler((_, json) => Console.WriteLine($"Statistics: {json.Replace(", \"", ",\n\t\"")}"))
     .SetPartitionsAssignedHandler((c, partitions) => {
         Console.WriteLine(
-            $"Partitions incrementally assigned: [{string.Join(", ", partitions.Select(p => p.Partition.Value))}], " + 
+            $"Partitions incrementally assigned: [{string.Join(", ", partitions.Select(p => p.Partition.Value))}], " +
             $" all: [{string.Join(", ", c.Assignment.Concat(partitions).Select(p => p.Partition.Value))}]");
     })
     .SetPartitionsRevokedHandler((c, partitions) => {

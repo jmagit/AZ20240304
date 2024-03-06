@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Confluent.Kafka.Admin;
 using System.Text.Json;
 
 if(args.Length != 1) {
@@ -9,6 +10,17 @@ if(args.Length != 1) {
 string brokerList = "localhost:9092";
 string topicName = "sensores";
 string sensorName = args[0].ToUpper();
+
+using(var adminClient = new AdminClientBuilder(new AdminClientConfig { BootstrapServers = brokerList }).Build()) {
+    try {
+        await adminClient.CreateTopicsAsync([
+            new TopicSpecification { Name = topicName, ReplicationFactor = 1, NumPartitions = 1 }
+        ]);
+    } catch(CreateTopicsException e) {
+        if(!e.Results[0].Error.Reason.Contains("already exists"))
+            Console.WriteLine($"An error occurred creating topic {e.Results[0].Topic}: {e.Results[0].Error.Reason}");
+    }
+}
 
 var config = new ProducerConfig { BootstrapServers = brokerList };
 
