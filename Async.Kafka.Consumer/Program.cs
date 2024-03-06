@@ -12,7 +12,7 @@ if(args.Length < 1) {
 string brokerList = "localhost:9092";
 string topicName = "sensores";
 string mode = args[0].ToLower();
-string groupName = args.Length > 1 ? args[1] : mode;
+string groupName = $"consumidor-{(args.Length > 1 ? args[1] : mode)}";
 
 using(var adminClient = new AdminClientBuilder(new AdminClientConfig { BootstrapServers = brokerList }).Build()) {
     try {
