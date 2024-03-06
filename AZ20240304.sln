@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoAPI", "DemoAPI\DemoAPI.csproj", "{87EF2560-6CA1-46F3-BE2D-0A8CBD2598AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoAPI", "DemoAPI\DemoAPI.csproj", "{87EF2560-6CA1-46F3-BE2D-0A8CBD2598AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Async.Amqp.Emisor", "Async.Amqp.Emisor\Async.Amqp.Emisor.csproj", "{5D7EB4B0-6A01-40E2-AB95-F2307BCF001E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Async.Amqp.Emisor", "Async.Amqp.Emisor\Async.Amqp.Emisor.csproj", "{5D7EB4B0-6A01-40E2-AB95-F2307BCF001E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Async.Amqp.Receptor", "Async.Amqp.Receptor\Async.Amqp.Receptor.csproj", "{5EF996DA-2E17-4BED-8214-4BE0F5C5C8CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Async.Amqp.Receptor", "Async.Amqp.Receptor\Async.Amqp.Receptor.csproj", "{5EF996DA-2E17-4BED-8214-4BE0F5C5C8CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Async.Kafka.Sensor", "Async.Kafka.Sensor\Async.Kafka.Sensor.csproj", "{F885184F-E802-4CAF-A4ED-4E24990FD76D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Async.Kafka.Consumer", "Async.Kafka.Consumer\Async.Kafka.Consumer.csproj", "{291E5ECC-6EA0-49E7-A125-D1F381A60FF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{5EF996DA-2E17-4BED-8214-4BE0F5C5C8CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EF996DA-2E17-4BED-8214-4BE0F5C5C8CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EF996DA-2E17-4BED-8214-4BE0F5C5C8CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F885184F-E802-4CAF-A4ED-4E24990FD76D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F885184F-E802-4CAF-A4ED-4E24990FD76D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F885184F-E802-4CAF-A4ED-4E24990FD76D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F885184F-E802-4CAF-A4ED-4E24990FD76D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{291E5ECC-6EA0-49E7-A125-D1F381A60FF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{291E5ECC-6EA0-49E7-A125-D1F381A60FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{291E5ECC-6EA0-49E7-A125-D1F381A60FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{291E5ECC-6EA0-49E7-A125-D1F381A60FF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
