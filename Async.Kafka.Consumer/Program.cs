@@ -10,9 +10,9 @@ if(args.Length < 1) {
 string brokerList = "localhost:9092";
 string topicName = "sensores";
 string mode = args[0].ToLower();
-string groupName = mode; // args[1];
+string groupName = args.Length > 1 ? args[1] : mode;
 
-Console.WriteLine($"Started consumer, Ctrl-C to stop consuming");
+Console.WriteLine($"Started consumer {mode.ToUpper()}, Ctrl-C to stop consuming");
 
 CancellationTokenSource cts = new CancellationTokenSource();
 Console.CancelKeyPress += (_, e) => {
@@ -33,34 +33,27 @@ var config = new ConsumerConfig {
     PartitionAssignmentStrategy = PartitionAssignmentStrategy.CooperativeSticky
 };
 
-using(var consumer = new ConsumerBuilder<Ignore, string>(config)
-    // Note: All handlers are called on the main .Consume thread.
+using(var consumer = new ConsumerBuilder<string, string>(config)
     .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
-    //.SetStatisticsHandler((_, json) => Console.WriteLine($"Statistics: {json}"))
-    //.SetPartitionsAssignedHandler((c, partitions) => {
-    //    Console.WriteLine(
-    //        "Partitions incrementally assigned: [" +
-    //        string.Join(',', partitions.Select(p => p.Partition.Value)) +
-    //        "], all: [" +
-    //        string.Join(',', c.Assignment.Concat(partitions).Select(p => p.Partition.Value)) +
-    //        "]");
-    //})
-    //.SetPartitionsRevokedHandler((c, partitions) => {
-    //    var remaining = c.Assignment.Where(atp => partitions.Where(rtp => rtp.TopicPartition == atp).Count() == 0);
-    //    Console.WriteLine(
-    //        "Partitions incrementally revoked: [" +
-    //        string.Join(',', partitions.Select(p => p.Partition.Value)) +
-    //        "], remaining: [" +
-    //        string.Join(',', remaining.Select(p => p.Partition.Value)) +
-    //        "]");
-    //})
-    //.SetPartitionsLostHandler((c, partitions) => {
-    //    Console.WriteLine($"Partitions were lost: [{string.Join(", ", partitions)}]");
-    //})
+    //.SetStatisticsHandler((_, json) => Console.WriteLine($"Statistics: {json.Replace(", \"", ",\n\t\"")}"))
+    .SetPartitionsAssignedHandler((c, partitions) => {
+        Console.WriteLine(
+            $"Partitions incrementally assigned: [{string.Join(", ", partitions.Select(p => p.Partition.Value))}], " + 
+            $" all: [{string.Join(", ", c.Assignment.Concat(partitions).Select(p => p.Partition.Value))}]");
+    })
+    .SetPartitionsRevokedHandler((c, partitions) => {
+        var remaining = c.Assignment.Where(atp => partitions.Where(rtp => rtp.TopicPartition == atp).Count() == 0);
+        Console.WriteLine(
+            $"Partitions incrementally revoked: [{string.Join(", ", partitions.Select(p => p.Partition.Value))}], " +
+            $" remaining: [{string.Join(", ", remaining.Select(p => p.Partition.Value))}]");
+    })
+    .SetPartitionsLostHandler((c, partitions) => {
+        Console.WriteLine($"Partitions were lost: [{string.Join(", ", partitions)}]");
+    })
     .Build()) {
     consumer.Subscribe(topicName);
 
-    Action<ConsumeResult<Ignore, string>> procesa = consumeResult => {
+    Action<ConsumeResult<string, string>> procesa = consumeResult => {
         var evento = JsonSerializer.Deserialize<Evento>(consumeResult.Message.Value);
         Console.WriteLine($"Received {consumeResult.Offset}: {evento.origen} - {evento.msg} [{evento.enviado}]");
     };
@@ -68,15 +61,15 @@ using(var consumer = new ConsumerBuilder<Ignore, string>(config)
         var calc = new Dictionary<string, long>();
         procesa = consumeResult => {
             var evento = JsonSerializer.Deserialize<Evento>(consumeResult.Message.Value);
-            var key = evento.origen;
+            var key = consumeResult.Message.Key; // evento.origen;
             if(calc.ContainsKey(key))
                 calc[key]++;
-            else 
+            else
                 calc[key] = 1;
             Console.WriteLine("\nResumen\n=====================");
             foreach(var item in calc) {
                 Console.WriteLine($"{item.Key}: {item.Value}");
-            } 
+            }
         };
     }
     try {
