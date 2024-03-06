@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 
@@ -33,7 +34,8 @@ var config = new ConsumerConfig {
     PartitionAssignmentStrategy = PartitionAssignmentStrategy.CooperativeSticky
 };
 
-using(var consumer = new ConsumerBuilder<string, string>(config)
+using(var consumer = new ConsumerBuilder<string, Evento>(config)
+    .SetValueDeserializer(new EventoDeserializer())
     .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
     //.SetStatisticsHandler((_, json) => Console.WriteLine($"Statistics: {json.Replace(", \"", ",\n\t\"")}"))
     .SetPartitionsAssignedHandler((c, partitions) => {
@@ -53,14 +55,16 @@ using(var consumer = new ConsumerBuilder<string, string>(config)
     .Build()) {
     consumer.Subscribe(topicName);
 
-    Action<ConsumeResult<string, string>> procesa = consumeResult => {
-        var evento = JsonSerializer.Deserialize<Evento>(consumeResult.Message.Value);
+    Action<ConsumeResult<string, Evento>> procesa = consumeResult => {
+        //var evento = JsonSerializer.Deserialize<Evento>(consumeResult.Message.Value);
+        var evento = consumeResult.Message.Value;
         Console.WriteLine($"Received {consumeResult.Offset}: {evento.origen} - {evento.msg} [{evento.enviado}]");
     };
     if(mode.StartsWith("calc")) {
         var calc = new Dictionary<string, long>();
         procesa = consumeResult => {
-            var evento = JsonSerializer.Deserialize<Evento>(consumeResult.Message.Value);
+            //var evento = JsonSerializer.Deserialize<Evento>(consumeResult.Message.Value);
+            var evento = consumeResult.Message.Value;
             var key = consumeResult.Message.Key; // evento.origen;
             if(calc.ContainsKey(key))
                 calc[key]++;
@@ -100,3 +104,10 @@ using(var consumer = new ConsumerBuilder<string, string>(config)
 }
 
 record Evento(string msg, string origen, DateTime enviado);
+
+class EventoDeserializer : IDeserializer<Evento> {
+    public Evento Deserialize(ReadOnlySpan<byte> data, bool isNull, SerializationContext context) {
+        if(isNull) return null;
+        return JsonSerializer.Deserialize<Evento>(Encoding.UTF8.GetString(data));
+    }
+}

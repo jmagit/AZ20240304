@@ -14,19 +14,20 @@ var config = new ProducerConfig { BootstrapServers = brokerList };
 
 using(var producer = new ProducerBuilder<string, string>(config).Build()) {
     Console.WriteLine("\n-----------------------------------------------------------------------");
-    Console.WriteLine($"Producer {producer.Name} producing on topic {topicName}.");
+    Console.WriteLine($"Producer {producer.Name} producing on topic {topicName} with key {sensorName}.");
     Console.WriteLine("-----------------------------------------------------------------------");
 
     for(int i = 1; i <= 100; i++) {
         try {
-            Thread.Sleep(Random.Shared.Next(500, 1000));
+            var delay = Random.Shared.Next(500, 1500);
+            Thread.Sleep(delay);
             var message =new Message<string, string> { 
                 Key = sensorName,
                 Value = $"{{\"msg\": \"Evento {i}\",\"origen\": \"{sensorName}\",\"enviado\": \"{DateTime.Now.ToString("s")}\"}}" 
                 //Value = JsonSerializer.Serialize(new Evento($"Evento {i}", sensorName, DateTime.Now))
             };
             var deliveryReport = await producer.ProduceAsync(topicName, message);
-            Console.WriteLine($"entrega: {deliveryReport.Offset} {message.Value}");
+            Console.WriteLine($"entrega ({delay / 1000.0}s): {deliveryReport.Offset} {message.Value}");
         } catch(ProduceException<string, string> e) {
             Console.WriteLine($"failed to deliver message: {e.Message} [{e.Error.Code}]");
         }
