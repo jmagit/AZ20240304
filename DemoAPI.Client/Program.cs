@@ -18,8 +18,6 @@ AuthToken auth;
 clientHandler = new HttpClientHandler();
 clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
 using(var client = new HttpClient(clientHandler) {
-    DefaultRequestVersion = HttpVersion.Version30,
-    //DefaultVersionPolicy = HttpVersionPolicy.RequestVersionExact,
     DefaultRequestHeaders = {
         { "Authorization", "Basic YnV0S19iYmdxVm95WkcxY01nak5NWEpDSkN3YTptRnZHZkdwdEp6dG1mSlAzOWZNTzFmNGZEc29h" },
     }
@@ -38,12 +36,12 @@ clientHandler = new HttpClientHandler();
 clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
 using(var client = new HttpClient(clientHandler) {
     DefaultRequestHeaders = {
-        { "Authorization", "Basic YnV0S19iYmdxVm95WkcxY01nak5NWEpDSkN3YTptRnZHZkdwdEp6dG1mSlAzOWZNTzFmNGZEc29h" },
+        { "Authorization", "Basic SFdzMGs3Q2JKcEpoTWF0UXU0YW9UODhQNGtFYTpDMXhMTmZRc0dNRUxaekJQQVRrbTk5RlR6c2th" },
     }
 }
 ) {
-    var content = new StringContent("grant_type=password&username=Consumidor&password=curso");
-    content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
+    string username = "Consumidor", password = "curso";
+    var content = new StringContent($"grant_type=password&username={username}&password={password}") { Headers = { ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded") } };
     var result = await client.PostAsync("https://localhost:9443/oauth2/token", content);
     Console.WriteLine($"\nStatusCode: {result.StatusCode}");
     Console.WriteLine($"Content: {await result.Content.ReadAsStringAsync()}");
