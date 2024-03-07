@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Async.Amqp.Emisor", "Async.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Async.Amqp.Receptor", "Async.Amqp.Receptor\Async.Amqp.Receptor.csproj", "{5EF996DA-2E17-4BED-8214-4BE0F5C5C8CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Async.Kafka.Sensor", "Async.Kafka.Sensor\Async.Kafka.Sensor.csproj", "{F885184F-E802-4CAF-A4ED-4E24990FD76D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Async.Kafka.Sensor", "Async.Kafka.Sensor\Async.Kafka.Sensor.csproj", "{F885184F-E802-4CAF-A4ED-4E24990FD76D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Async.Kafka.Consumer", "Async.Kafka.Consumer\Async.Kafka.Consumer.csproj", "{291E5ECC-6EA0-49E7-A125-D1F381A60FF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Async.Kafka.Consumer", "Async.Kafka.Consumer\Async.Kafka.Consumer.csproj", "{291E5ECC-6EA0-49E7-A125-D1F381A60FF6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoAPI.Client", "DemoAPI.Client\DemoAPI.Client.csproj", "{11E1E94C-87E9-456D-8E20-83B34874C115}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{291E5ECC-6EA0-49E7-A125-D1F381A60FF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{291E5ECC-6EA0-49E7-A125-D1F381A60FF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{291E5ECC-6EA0-49E7-A125-D1F381A60FF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11E1E94C-87E9-456D-8E20-83B34874C115}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11E1E94C-87E9-456D-8E20-83B34874C115}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11E1E94C-87E9-456D-8E20-83B34874C115}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11E1E94C-87E9-456D-8E20-83B34874C115}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
