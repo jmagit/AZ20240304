@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Orquesta": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7081"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 30528,
+      "useSSL": false
+    }
+  }
+}
