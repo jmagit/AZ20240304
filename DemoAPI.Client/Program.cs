@@ -12,18 +12,16 @@ using System.Text.Json.Serialization;
 //    Console.WriteLine($"Content: {await result.Content.ReadAsStringAsync()}");
 //}
 
-HttpClientHandler clientHandler;
 AuthToken auth;
-
-clientHandler = new HttpClientHandler();
-clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+HttpClientHandler clientHandler = new HttpClientHandler();
+clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
 using(var client = new HttpClient(clientHandler) {
     DefaultRequestHeaders = {
         { "Authorization", "Basic YnV0S19iYmdxVm95WkcxY01nak5NWEpDSkN3YTptRnZHZkdwdEp6dG1mSlAzOWZNTzFmNGZEc29h" },
     }
 }
 ) {
-    var content = new StringContent("grant_type=client_credentials") { Headers = { ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded") } };
+    var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "grant_type", "client_credentials" } });
     var result = await client.PostAsync("https://localhost:9443/oauth2/token", content);
     Console.WriteLine($"StatusCode: {result.StatusCode}");
     var body = await result.Content.ReadAsStringAsync();
