@@ -6,7 +6,7 @@ Accept: application/json
 ###
 
 POST https://localhost:9443/oauth2/token
-Authorization: Basic YnV0S19iYmdxVm95WkcxY01nak5NWEpDSkN3YTptRnZHZkdwdEp6dG1mSlAzOWZNTzFmNGZEc29h
+Authorization: 
 Content-Type: text/plain
 
 grant_type=client_credentials
